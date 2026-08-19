@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartomancie — Nigu</title>
+<style>
+
+
+:root{
+  --bg:#090b10;
+  --bg2:#0d1118;
+  --text:#eef3f7;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  background:#090b10;
+  color:var(--text);
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  overflow-x:hidden;
+}
+button,input{font:inherit}
+#cartomancy-app{
+  display:block;
+}
+
+/* ==========================================================
+   INTERFACE CARTOMANCIE
+   ========================================================== */
+#cartomancy-app{
+  display:none;
+  min-height:100vh;
+  color:#ebe3da;
+  background:
+    radial-gradient(circle at 18% 10%,rgba(157,124,244,.08),transparent 30rem),
+    radial-gradient(circle at 82% 12%,rgba(216,185,122,.07),transparent 30rem),
+    linear-gradient(160deg,#110e15 0%,#090b10 52%,#120e0d 100%);
+}
+#cartomancy-app.active{display:block}
+.cartomancy-topbar{
+  min-height:68px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  padding:12px 26px;
+  border-bottom:1px solid rgba(216,185,122,.10);
+  background:rgba(10,10,14,.90);
+  backdrop-filter:blur(16px);
+}
+.cartomancy-brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+.cartomancy-brand-mark{
+  width:38px;height:38px;
+  display:grid;place-items:center;
+  border:1px solid rgba(216,185,122,.18);
+  border-radius:50%;
+  color:#ddc58f;
+  background:rgba(216,185,122,.04);
+}
+.cartomancy-brand strong{
+  display:block;
+  color:#f2e6cf;
+  font-family:Georgia,'Times New Roman',serif;
+  letter-spacing:.08em;
+}
+.cartomancy-brand span{
+  display:block;
+  margin-top:2px;
+  color:#766e79;
+  font-size:.64rem;
+}
+.cartomancy-return{
+  padding:9px 12px;
+  border:1px solid rgba(216,185,122,.12);
+  border-radius:10px;
+  background:rgba(255,255,255,.015);
+  color:#ad9da9;
+  cursor:pointer;
+}
+.cartomancy-return:hover{color:#f3e3c4;border-color:rgba(216,185,122,.25)}
+.cartomancy-main{
+  width:min(1220px,calc(100% - 32px));
+  margin:0 auto;
+  padding:62px 0 70px;
+}
+.cartomancy-hero{
+  min-height:470px;
+  display:grid;
+  grid-template-columns:1fr .9fr;
+  align-items:center;
+  gap:46px;
+}
+.cartomancy-eyebrow{
+  color:#a28aa9;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:.64rem;
+  letter-spacing:.14em;
+}
+.cartomancy-hero h1{
+  margin:12px 0 18px;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(4rem,9vw,8rem);
+  font-weight:400;
+  line-height:.82;
+  letter-spacing:-.045em;
+  color:#f5e7cc;
+}
+.cartomancy-hero p{
+  max-width:650px;
+  margin:0;
+  color:#9a909b;
+  line-height:1.75;
+}
+.cartomancy-table{
+  position:relative;
+  min-height:380px;
+  display:grid;
+  place-items:center;
+}
+.table-orbit{
+  position:absolute;
+  width:320px;height:320px;
+  border:1px solid rgba(216,185,122,.10);
+  border-radius:50%;
+}
+.table-orbit.orbit-one{transform:scaleY(.58) rotate(23deg)}
+.table-orbit.orbit-two{transform:scaleX(.62) rotate(-30deg);border-color:rgba(157,124,244,.09)}
+.table-card{
+  position:absolute;
+  width:130px;height:205px;
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  border:1px solid rgba(216,185,122,.17);
+  border-radius:13px;
+  background:
+    radial-gradient(circle at 50% 44%,rgba(157,124,244,.10),transparent 6rem),
+    linear-gradient(160deg,#1a151d,#0f1015);
+  box-shadow:0 22px 45px rgba(0,0,0,.32);
+  color:#8e818e;
+}
+.table-card strong{
+  align-self:center;
+  margin:auto;
+  color:#d9bd82;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:2rem;
+}
+.table-card-a{transform:translateX(-112px) rotate(-11deg)}
+.table-card-b{z-index:2;transform:translateY(-18px)}
+.table-card-c{transform:translateX(112px) rotate(11deg)}
+.cartomancy-workspace{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+  padding-top:24px;
+  border-top:1px solid rgba(216,185,122,.08);
+}
+.cartomancy-work-card{
+  min-height:190px;
+  padding:20px;
+  border:1px solid rgba(255,255,255,.055);
+  border-radius:15px;
+  background:rgba(255,255,255,.012);
+  color:#dcd3cc;
+  text-align:left;
+  cursor:pointer;
+  transition:.18s ease;
+}
+.cartomancy-work-card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(216,185,122,.17);
+  background:rgba(216,185,122,.025);
+}
+.work-number{
+  display:block;
+  margin-bottom:28px;
+  color:#776d79;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:.62rem;
+}
+.cartomancy-work-card strong{
+  display:block;
+  font-family:Georgia,'Times New Roman',serif;
+  color:#eee0c5;
+  font-size:1.25rem;
+}
+.cartomancy-work-card p{
+  margin:8px 0 18px;
+  color:#867d87;
+  font-size:.73rem;
+  line-height:1.55;
+}
+.cartomancy-work-card em{
+  color:#a58b70;
+  font-size:.65rem;
+  font-style:normal;
+  text-transform:uppercase;
+  letter-spacing:.09em;
+}
+
+@media(max-width:1200px){
+  .portal-login-layout{
+    grid-template-columns:1fr;
+    width:min(980px,100%);
+  }
+  .cartomancy-entry{min-height:380px}
+  .cartomancy-entry-center{grid-template-columns:160px 1fr;align-items:center}
+}
+@media(max-width:760px){
+  .cartomancy-entry{min-height:420px}
+  .cartomancy-entry-center{grid-template-columns:1fr}
+  .cartomancy-sigil{width:110px;height:110px}
+  .cartomancy-hero{grid-template-columns:1fr;gap:20px}
+  .cartomancy-table{min-height:300px}
+  .cartomancy-workspace{grid-template-columns:1fr}
+  .cartomancy-main{padding-top:38px}
+}
+
+
+/* ==========================================================
+   CARTOMANCIE — système magique de Nigu
+   ========================================================== */
+.cartomancy-topbar{
+  position:sticky;
+  top:0;
+  z-index:30;
+}
+.cartomancy-nav{
+  display:flex;
+  align-items:center;
+  gap:3px;
+  overflow-x:auto;
+  flex:1;
+  justify-content:center;
+}
+.cartomancy-nav button{
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:#827a86;
+  padding:8px 10px;
+  cursor:pointer;
+  font-size:.69rem;
+  white-space:nowrap;
+}
+.cartomancy-nav button:hover{
+  color:#d8c9b4;
+  background:rgba(255,255,255,.025);
+}
+.cartomancy-nav button.active{
+  color:#e7d09b;
+  background:rgba(216,185,122,.055);
+}
+
+.cartomancy-hero-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:18px;
+}
+.cartomancy-hero-tags span{
+  padding:6px 9px;
+  border:1px solid rgba(216,185,122,.10);
+  border-radius:999px;
+  color:#948895;
+  background:rgba(255,255,255,.012);
+  font-size:.64rem;
+}
+.table-card small{
+  align-self:center;
+  color:#796f7a;
+  font-size:.62rem;
+}
+.table-card > span{
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:.56rem;
+  letter-spacing:.09em;
+}
+
+.cartomancy-content{
+  margin-top:30px;
+  padding-top:32px;
+  border-top:1px solid rgba(216,185,122,.08);
+}
+.carto-pane{display:none}
+.carto-pane.active{
+  display:block;
+  animation:cartoReveal .18s ease;
+}
+@keyframes cartoReveal{
+  from{opacity:0;transform:translateY(4px)}
+  to{opacity:1;transform:none}
+}
+.carto-section-head{
+  margin-bottom:22px;
+}
+.carto-section-head > span{
+  color:#9e869e;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:.62rem;
+  letter-spacing:.14em;
+}
+.carto-section-head h2{
+  max-width:850px;
+  margin:7px 0 0;
+  color:#f0dfc2;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(1.7rem,4vw,3rem);
+  font-weight:500;
+  line-height:1.06;
+}
+.carto-prose{
+  max-width:980px;
+}
+.carto-prose p{
+  margin:0 0 17px;
+  color:#a39aa4;
+  font-size:.86rem;
+  line-height:1.85;
+}
+.carto-prose strong{
+  color:#ddc99f;
+  font-weight:650;
+}
+
+.carto-principle-grid,
+.carto-use-grid,
+.office-flow,
+.training-levels,
+.archive-grid{
+  display:grid;
+  gap:12px;
+  margin-top:28px;
+}
+.carto-principle-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+.carto-principle-grid > div,
+.office-flow > div,
+.training-levels > div{
+  padding:18px;
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:13px;
+  background:rgba(255,255,255,.011);
+}
+.carto-principle-grid span,
+.office-flow span,
+.training-levels span{
+  display:block;
+  margin-bottom:22px;
+  color:#716879;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:.58rem;
+  letter-spacing:.10em;
+}
+.carto-principle-grid strong,
+.office-flow strong,
+.training-levels strong{
+  display:block;
+  color:#e4d3b6;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:1.08rem;
+}
+.carto-principle-grid p,
+.office-flow p,
+.training-levels p{
+  margin:7px 0 0;
+  color:#817982;
+  font-size:.70rem;
+  line-height:1.55;
+}
+
+.carto-use-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+.carto-use-card{
+  min-height:130px;
+  padding:17px;
+  border:1px solid rgba(157,124,244,.07);
+  border-radius:13px;
+  background:
+    linear-gradient(160deg,rgba(157,124,244,.035),rgba(216,185,122,.018));
+}
+.carto-use-card strong{
+  display:block;
+  color:#decaa5;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:1rem;
+}
+.carto-use-card span{
+  display:block;
+  margin-top:8px;
+  color:#817783;
+  font-size:.69rem;
+  line-height:1.55;
+}
+
+.office-flow{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+.carto-note{
+  margin-top:18px;
+  max-width:980px;
+  padding:15px 17px;
+  border-left:3px solid rgba(216,185,122,.40);
+  background:rgba(216,185,122,.025);
+  color:#9b9098;
+  font-size:.74rem;
+  line-height:1.65;
+}
+
+.training-levels{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+
+.risk-stack{
+  display:grid;
+  gap:10px;
+  max-width:1050px;
+}
+.risk-stack section{
+  display:grid;
+  grid-template-columns:48px 1fr;
+  gap:14px;
+  padding:17px 18px;
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:13px;
+  background:rgba(255,255,255,.010);
+}
+.risk-stack section > span{
+  width:34px;height:34px;
+  display:grid;place-items:center;
+  border:1px solid rgba(216,185,122,.10);
+  border-radius:50%;
+  color:#8c7a6d;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:.59rem;
+}
+.risk-stack strong{
+  display:block;
+  color:#e1cfaf;
+  font-size:.84rem;
+}
+.risk-stack p{
+  margin:7px 0 0;
+  color:#8c838d;
+  font-size:.73rem;
+  line-height:1.65;
+}
+.risk-stack p strong{
+  display:inline;
+  font-size:inherit;
+}
+
+.archive-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.archive-grid button{
+  min-height:145px;
+  padding:17px;
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:13px;
+  background:rgba(255,255,255,.010);
+  color:#d9cbb8;
+  text-align:left;
+  cursor:pointer;
+}
+.archive-grid button:hover{
+  border-color:rgba(216,185,122,.14);
+  background:rgba(216,185,122,.024);
+}
+.archive-grid button span{
+  display:block;
+  margin-bottom:20px;
+  color:#726977;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:.58rem;
+}
+.archive-grid button strong{
+  display:block;
+  color:#e2d1b4;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:1rem;
+}
+.archive-grid button p{
+  margin:7px 0 0;
+  color:#807782;
+  font-size:.69rem;
+  line-height:1.5;
+}
+.carto-archive-placeholder{
+  margin-top:14px;
+  padding:24px;
+  border:1px dashed rgba(216,185,122,.13);
+  border-radius:14px;
+  background:rgba(216,185,122,.012);
+}
+.carto-archive-placeholder span{
+  display:block;
+  color:#786d79;
+  font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+  font-size:.58rem;
+  letter-spacing:.10em;
+}
+.carto-archive-placeholder strong{
+  display:block;
+  margin-top:7px;
+  color:#e3d1b3;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:1.15rem;
+}
+.carto-archive-placeholder p{
+  max-width:760px;
+  margin:8px 0 0;
+  color:#827984;
+  font-size:.71rem;
+  line-height:1.55;
+}
+
+@media(max-width:980px){
+  .cartomancy-topbar{
+    align-items:flex-start;
+    flex-wrap:wrap;
+  }
+  .cartomancy-nav{
+    order:3;
+    width:100%;
+    justify-content:flex-start;
+  }
+  .carto-principle-grid,
+  .carto-use-grid,
+  .office-flow,
+  .training-levels{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:620px){
+  .carto-principle-grid,
+  .carto-use-grid,
+  .office-flow,
+  .training-levels,
+  .archive-grid{
+    grid-template-columns:1fr;
+  }
+  .risk-stack section{
+    grid-template-columns:1fr;
+  }
+}
+
+
+.exact-source-prose{
+  max-width:1040px;
+}
+.exact-source-prose p{
+  font-size:.90rem;
+  line-height:1.90;
+}
+.exact-risk-stack p{
+  font-size:.76rem;
+  line-height:1.72;
+}
+
+
+/* ==========================================================
+   CARTOMANCIE — navigation par grandes cartes (style v34)
+   ========================================================== */
+.cartomancy-section-menu{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  margin-top:8px;
+  padding-top:28px;
+  border-top:1px solid rgba(216,185,122,.08);
+}
+.cartomancy-section-menu .cartomancy-work-card{
+  position:relative;
+  min-height:205px;
+  overflow:hidden;
+}
+.cartomancy-section-menu .cartomancy-work-card::after{
+  content:"";
+  position:absolute;
+  right:-52px;
+  bottom:-62px;
+  width:140px;
+  height:140px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(216,185,122,.09),transparent 68%);
+  opacity:0;
+  transition:.2s ease;
+}
+.cartomancy-section-menu .cartomancy-work-card:hover::after,
+.cartomancy-section-menu .cartomancy-work-card.active::after{
+  opacity:1;
+}
+.cartomancy-section-menu .cartomancy-work-card.active{
+  border-color:rgba(216,185,122,.25);
+  background:
+    linear-gradient(160deg,rgba(157,124,244,.045),rgba(216,185,122,.035)),
+    rgba(255,255,255,.014);
+  box-shadow:0 16px 38px rgba(0,0,0,.18);
+}
+.cartomancy-section-menu .cartomancy-work-card.active em{
+  color:#e3c98f;
+}
+.cartomancy-section-menu .cartomancy-work-card.active .work-number{
+  color:#c6a972;
+}
+.cartomancy-content{
+  margin-top:22px;
+}
+.carto-pane.active{
+  padding:26px 2px 10px;
+}
+@media(max-width:960px){
+  .cartomancy-section-menu{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:620px){
+  .cartomancy-section-menu{
+    grid-template-columns:1fr;
+  }
+}
+
+
+
+/* ==========================================================
+   CARTOMANCIE — essai interface maître/détail
+   Sélection à gauche, contenu à droite
+   ========================================================== */
+.cartomancy-main{
+  width:min(1380px,calc(100% - 32px));
+}
+
+.cartomancy-hero{
+  min-height:320px;
+  grid-template-columns:1fr .72fr;
+  gap:34px;
+}
+.cartomancy-table{
+  min-height:280px;
+  transform:scale(.86);
+  transform-origin:center;
+}
+
+.cartomancy-browser{
+  display:grid;
+  grid-template-columns:300px minmax(0,1fr);
+  gap:22px;
+  align-items:start;
+  margin-top:18px;
+  padding-top:22px;
+  border-top:1px solid rgba(216,185,122,.08);
+}
+
+.cartomancy-section-menu{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:9px !important;
+  margin:0 !important;
+  padding:0 !important;
+  border-top:0 !important;
+  position:sticky;
+  top:88px;
+}
+
+.cartomancy-section-menu .cartomancy-work-card{
+  min-height:0 !important;
+  padding:14px 15px !important;
+  border-radius:12px;
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr);
+  column-gap:10px;
+  row-gap:3px;
+  align-items:center;
+}
+
+.cartomancy-section-menu .work-number{
+  grid-row:1 / span 3;
+  margin:0 !important;
+  align-self:start;
+  padding-top:2px;
+}
+
+.cartomancy-section-menu .cartomancy-work-card strong{
+  font-size:.96rem;
+  line-height:1.2;
+}
+
+.cartomancy-section-menu .cartomancy-work-card p{
+  margin:3px 0 0 !important;
+  font-size:.66rem;
+  line-height:1.4;
+}
+
+.cartomancy-section-menu .cartomancy-work-card em{
+  display:none;
+}
+
+.cartomancy-section-menu .cartomancy-work-card:hover{
+  transform:translateX(3px);
+}
+
+.cartomancy-content{
+  margin:0 !important;
+  padding:0 !important;
+  border-top:0 !important;
+  min-width:0;
+}
+
+.carto-pane.active{
+  padding:24px 26px 28px !important;
+  min-height:520px;
+  border:1px solid rgba(216,185,122,.10);
+  border-radius:16px;
+  background:
+    linear-gradient(160deg,rgba(157,124,244,.025),rgba(216,185,122,.018)),
+    rgba(255,255,255,.010);
+  box-shadow:0 18px 44px rgba(0,0,0,.18);
+}
+
+.carto-section-head{
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid rgba(216,185,122,.08);
+}
+
+.carto-section-head h2{
+  margin-bottom:0;
+}
+
+@media(max-width:980px){
+  .cartomancy-browser{
+    grid-template-columns:230px minmax(0,1fr);
+    gap:14px;
+  }
+  .cartomancy-section-menu .cartomancy-work-card p{
+    display:none;
+  }
+  .cartomancy-section-menu .cartomancy-work-card{
+    grid-template-columns:28px minmax(0,1fr);
+  }
+}
+
+@media(max-width:760px){
+  .cartomancy-hero{
+    min-height:0;
+  }
+  .cartomancy-browser{
+    grid-template-columns:1fr;
+  }
+  .cartomancy-section-menu{
+    position:static;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  }
+  .cartomancy-section-menu .cartomancy-work-card{
+    display:block;
+  }
+  .cartomancy-section-menu .work-number{
+    display:block;
+    margin-bottom:7px !important;
+  }
+  .cartomancy-content{
+    margin-top:4px !important;
+  }
+  .carto-pane.active{
+    min-height:0;
+    padding:20px 16px 22px !important;
+  }
+}
+
+
+
+</style>
+</head>
+<body>
+<section id="cartomancy-app" class="active" aria-hidden="false">
+  <header class="cartomancy-topbar">
+    <div class="cartomancy-brand">
+      <span class="cartomancy-brand-mark">✦</span>
+      <div>
+        <strong>CARTOMANCIE</strong>
+        <span>Système magique de scellement</span>
+      </div>
+    </div>
+
+    <button class="cartomancy-return" onclick="window.location.href='index.html'">↩ Retour au portail</button>
+  </header>
+
+  <main class="cartomancy-main">
+    <section class="cartomancy-hero">
+      <div class="cartomancy-hero-copy">
+        <span class="cartomancy-eyebrow">POUVOIR PRINCIPAL DE NIGU</span>
+        <h1>Cartomancie</h1>
+        <p>
+          C'est l'un des pouvoirs principale de Nigu en temps que déesse des connaissances,
+          c'est une capacité quelle as utiliser pour changer quelques règles de la magie du monde.
+        </p>
+      </div>
+
+      <div class="cartomancy-table" aria-hidden="true">
+        <div class="table-orbit orbit-one"></div>
+        <div class="table-orbit orbit-two"></div>
+
+        <div class="table-card table-card-a">
+          <span>CARTE</span>
+          <strong>✦</strong>
+          <small>Effet</small>
+        </div>
+
+        <div class="table-card table-card-b">
+          <span>SCEAU</span>
+          <strong>◇</strong>
+          <small>Essence</small>
+        </div>
+
+        <div class="table-card table-card-c">
+          <span>OFFICE</span>
+          <strong>✧</strong>
+          <small>Fabrication</small>
+        </div>
+      </div>
+    </section>
+
+    <div class="cartomancy-browser">
+    <section class="cartomancy-workspace cartomancy-section-menu" aria-label="Sections de la Cartomancie">
+      <button class="cartomancy-work-card active" data-carto-tab="overview" onclick="setCartomancyTab('overview')">
+        <span class="work-number">01</span>
+        <strong>Présentation générale</strong>
+        <p>Principe fondamental de la Cartomancie et fonctionnement des cartes.</p>
+        <em>Ouvrir</em>
+      </button>
+
+      <button class="cartomancy-work-card" data-carto-tab="access" onclick="setCartomancyTab('access')">
+        <span class="work-number">02</span>
+        <strong>Accessibilité</strong>
+        <p>Usage populaire, non-mages et diffusion des arts mystiques.</p>
+        <em>Ouvrir</em>
+      </button>
+
+      <button class="cartomancy-work-card" data-carto-tab="offices" onclick="setCartomancyTab('offices')">
+        <span class="work-number">03</span>
+        <strong>Les Offices</strong>
+        <p>Fabrication, gravure, scellement et organisation des ateliers.</p>
+        <em>Ouvrir</em>
+      </button>
+
+      <button class="cartomancy-work-card" data-carto-tab="training" onclick="setCartomancyTab('training')">
+        <span class="work-number">04</span>
+        <strong>Formation</strong>
+        <p>Statut des Cartomanciens et apprentissage des sceaux.</p>
+        <em>Ouvrir</em>
+      </button>
+
+      <button class="cartomancy-work-card" data-carto-tab="risks" onclick="setCartomancyTab('risks')">
+        <span class="work-number">05</span>
+        <strong>Contraintes et Risques</strong>
+        <p>Capture, expertise, production, non-réplication et inviolabilité des cartes.</p>
+        <em>Ouvrir</em>
+      </button>
+
+      <button class="cartomancy-work-card" data-carto-tab="archive" onclick="setCartomancyTab('archive')">
+        <span class="work-number">06</span>
+        <strong>Archives</strong>
+        <p>Section destinée au futur catalogue de cartes.</p>
+        <em>Ouvrir</em>
+      </button>
+    </section>
+
+    <section class="cartomancy-content">
+      <article class="carto-pane active" data-carto-pane="overview">
+        <div class="carto-section-head">
+          <span>🌌 PRÉSENTATION GÉNÉRALE ET PRINCIPE FONDAMENTAL</span>
+          <h2>Présentation générale et principe fondamental</h2>
+        </div>
+
+        <div class="carto-prose exact-source-prose">
+          <p>
+            La Cartomancie est un art magique, conçu pour rendre la pratique des arts mystiques plus accessible et pragmatique au commun des mortels.
+            Dans un monde où posséder un don magique ne garantit ni maîtrise ni efficacité, la cartomancie offre un moyen d’organiser, simplifier et canaliser des forces déjà présentes.
+          </p>
+
+          <p>
+            Ce pouvoir repose sur la capacité à sceller, dans des cartes spécialement préparées, l’essence d’êtres vivants, de phénomènes surnaturels ou d’effets magiques.
+            Ces cartes agissent comme des vecteurs, condensant et simplifiant des processus complexes, et rendant leur usage plus sûr et plus accessible, même pour des utilisateurs moins expérimentés.
+          </p>
+        </div>
+      </article>
+
+      <article class="carto-pane" data-carto-pane="access">
+        <div class="carto-section-head">
+          <span>🗃️ ACCESSIBILITÉ ET USAGE POPULAIRE</span>
+          <h2>Accessibilité et usage populaire</h2>
+        </div>
+
+        <div class="carto-prose exact-source-prose">
+          <p>
+            Les cartes peuvent être activées par des non-mages, offrant des effets standardisés : soins, protection, invocation, renforcement, etc.
+          </p>
+
+          <p>
+            Cette accessibilité a permis de diffuser la magie plus facilement et a diminué le monopole de certains cercles fermés des grandes écoles et des lignées nobles.
+          </p>
+
+          <p>
+            Pour beaucoup, la cartomancie représente une première approche des arts mystiques, ou un outil pratique au quotidien.
+          </p>
+        </div>
+      </article>
+
+      <article class="carto-pane" data-carto-pane="offices">
+        <div class="carto-section-head">
+          <span>🏛️ LES OFFICES</span>
+          <h2>Les Offices</h2>
+        </div>
+
+        <div class="carto-prose exact-source-prose">
+          <p>
+            Les zones spécialisées où l’on fabrique, grave et scelle ces cartes sont appelées Offices.
+          </p>
+
+          <p>
+            Ces lieux fonctionnent comme des ateliers, des académies ou des guildes : on y enseigne la théorie des sceaux, la préparation des encres et la stabilisation des essences.
+          </p>
+
+          <p>
+            Les Offices collaborent souvent avec des praticiens d’autres disciplines magiques pour capturer des effets rares ou complexes, créant ainsi un commerce interdisciplinaire florissant.
+          </p>
+        </div>
+      </article>
+
+      <article class="carto-pane" data-carto-pane="training">
+        <div class="carto-section-head">
+          <span>🎓 FORMATION ET STATUT DES CARTOMANCIENS</span>
+          <h2>Formation et statut des Cartomanciens</h2>
+        </div>
+
+        <div class="carto-prose exact-source-prose">
+          <p>
+            Tout utilisateur de carte n’est pas un cartomancien.
+          </p>
+
+          <p>
+            Devenir cartomancien signifie étudier sérieusement la structure des sceaux, la nature des énergies et les règles de capture.
+          </p>
+
+          <p>
+            C’est un chemin ouvert aux érudits, aventuriers ou autodidactes, souvent bien plus abordable que les grandes écoles réservées à la noblesse et aux riches.
+          </p>
+
+          <p>
+            Pour de nombreux apprentis mages, la cartomancie est un tremplin : un moyen de financer ou de valider des études plus coûteuses grâce à un art reconnu et utile.
+          </p>
+        </div>
+      </article>
+
+      <article class="carto-pane" data-carto-pane="risks">
+        <div class="carto-section-head">
+          <span>⚠️ CONTRAINTES ET RISQUES</span>
+          <h2>Contraintes et Risques</h2>
+        </div>
+
+        <div class="risk-stack exact-risk-stack">
+          <section>
+            <span>01</span>
+            <div>
+              <strong>Exigence d’expertise pour les sceaux puissants</strong>
+              <p>
+                Les cartes renfermant des magies puissantes ou complexes sont scellées à l’aide de glyphes élaborés et dangereux. Leur activation est <strong>réservée aux utilisateurs expérimentés</strong>, capables d’en comprendre les subtilités. Certaines écoles ou traditions développent des sceaux exclusifs, limitant leur manipulation à quelques initiés.
+              </p>
+            </div>
+          </section>
+
+          <section>
+            <span>02</span>
+            <div>
+              <strong>Surcharge organisationnelle et poids</strong>
+              <p>
+                Transporter un grand nombre de cartes n’est pas anodin : au-delà d’un certain seuil, leur organisation devient complexe et leur poids peut devenir encombrant. Les cartomanciens expérimentés apprennent à gérer soigneusement leur collection active et leurs archives pour éviter la confusion ou la lenteur en situation critique.
+              </p>
+            </div>
+          </section>
+
+          <section>
+            <span>03</span>
+            <div>
+              <strong>Condition de capture</strong>
+              <p>
+                La capture d’une entité exige qu’elle soit en état d’<strong>incapacité réelle ou d’abandon</strong>, car tant qu’elle résiste, aucun sceau ne peut l’enfermer. Il faut la forcer à <strong>renoncer au combat</strong> ou la réduire à une condition où elle est <strong>incapable de s’y opposer</strong> : qu’elle soit terrassée, mourante, prostrée ou inconsciente car une fois scellée, l’entité devient un <strong>serviteur, un mignon</strong>, soumis à la volonté du porteur de la carte ou de la porteur l’ayant initialement capturer selon les cartes.
+              </p>
+            </div>
+          </section>
+
+          <section>
+            <span>04</span>
+            <div>
+              <strong>Dépendance artisanale</strong>
+              <p>
+                La fabrication d’une carte est rarement solitaire : elle nécessite la collaboration de <strong>plusieurs artisans spécialisés</strong> (graveurs, alchimistes, calligraphes mystiques, relieurs magiques). Cette dépendance limite la production et la qualité des cartes en fonction des ressources locales et des savoir-faire disponibles.
+              </p>
+
+            </div>
+          </section>
+
+          <section>
+            <span>05</span>
+            <div>
+              <strong>Non-réplication, production en série et caractère définitif</strong>
+              <p>
+                Les cartes possèdent une propriété fondamentale issue des règles mêmes de la Cartomancie : <strong>elles ne peuvent pas être répliquées à l’identique</strong>. Un sort de duplication, une machine de copie ou toute autre méthode cherchant à reproduire directement une carte existante échouera. Deux cartes parfaitement identiques ne peuvent simplement pas exister.
+              </p>
+              <p>
+                Cela n’empêche cependant pas leur <strong>production en série</strong>. Des imprimeries spécialement conçues peuvent fabriquer successivement des cartes reposant sur le même modèle, à condition que chaque exemplaire possède au moins certaines différences permettant de le distinguer des autres.
+              </p>
+              <p>
+                Cette contrainte est notamment à l’origine de l’utilisation systématique de <strong>numéros de série</strong> dans les productions industrielles. Ceux-ci permettent à la fois d’identifier chaque carte individuellement et de respecter la règle empêchant l’existence de copies totalement identiques.
+              </p>
+              <p>
+                Ce problème était beaucoup moins important lorsque les cartes étaient fabriquées à la main : les différences naturelles de tracé, de matériaux, d’encre ou de fabrication suffisaient généralement à rendre chaque exemplaire distinct.
+              </p>
+              <p>
+                Une seconde règle importante est que <strong>la fabrication d’une carte est définitive</strong>. Une fois son scellement achevé, la carte ne peut plus être modifiée artificiellement. Son contenu, ses propriétés, ses inscriptions et sa fonction ne peuvent pas être réécrits ou altérés après coup.
+              </p>
+              <p>
+                La seule exception concerne l’évolution naturelle de ce qui a été scellé. Si une créature, une essence ou un phénomène évolue de lui-même, la carte peut refléter cette évolution sans que sa structure fondamentale ait été modifiée.
+              </p>
+              <p>
+                Les véritables <strong>imprimeries à cartes</strong> sont néanmoins des installations extrêmement coûteuses et complexes. Leur construction, leur entretien et leur utilisation nécessitent des ressources importantes ainsi qu’une expertise spécialisée. Elles sont donc principalement détenues par des États ou par certaines organisations suffisamment importantes pour disposer des moyens nécessaires.
+              </p>
+            </div>
+          </section>
+
+          <section>
+            <span>06</span>
+            <div>
+              <strong>Utilisation institutionnelle des cartes</strong>
+              <p>
+                Les États ont rapidement compris que les propriétés des cartes avaient une utilité bien au-delà du scellement de créatures ou de phénomènes magiques.
+              </p>
+              <p>
+                Une carte authentique ne pouvant ni être <strong>dupliquée à l’identique</strong>, ni être <strong>modifiée après sa création</strong>, elle constitue un support particulièrement sûr pour les documents officiels.
+              </p>
+              <p>
+                Certaines administrations utilisent ainsi des cartes pour créer de la <strong>monnaie</strong>, des <strong>cartes d’identité</strong>, des <strong>passeports</strong>, des titres administratifs ou d’autres documents nécessitant une forte garantie d’authenticité.
+              </p>
+              <p>
+                Une fois les informations administratives inscrites lors de la fabrication, elles deviennent pratiquement <strong>inviolables</strong>. Il n’est pas possible de récupérer une carte d’identité existante et d’en changer le nom, la photographie ou les informations personnelles, pas plus qu’il n’est possible de modifier la valeur inscrite sur une carte monétaire.
+              </p>
+              <p>
+                Cette propriété réduit considérablement les possibilités de falsification, facilite le <strong>transport de fonds</strong> et permet de certifier plus sûrement des documents importants. Dans le domaine monétaire, elle peut également servir de base à une économie plus stable en limitant fortement la contrefaçon par reproduction.
+              </p>
+            </div>
+          </section>
+        </div>
+      </article>
+
+      <article class="carto-pane" data-carto-pane="archive">
+        <div class="carto-section-head">
+          <span>ARCHIVES</span>
+          <h2>Archives cartomantiques</h2>
+        </div>
+
+        <div class="carto-archive-placeholder">
+          <span>SECTION À DÉVELOPPER</span>
+          <strong>Catalogue de cartes</strong>
+          <p>
+            Cette partie reste volontairement vide pour le moment afin de ne pas inventer de règles ou de catégories que tu n’as pas encore définies.
+          </p>
+        </div>
+      </article>
+    </section>
+    </div>
+  </main>
+</section>
+<script>
+
+
+function setCartomancyTab(name){
+  document.querySelectorAll('[data-carto-tab]').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.cartoTab === name);
+  });
+
+  document.querySelectorAll('.carto-pane').forEach(pane=>{
+    pane.classList.toggle('active', pane.dataset.cartoPane === name);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  setCartomancyTab('overview');
+});
+
+
+</script>
+</body>
+</html>
